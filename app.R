@@ -304,7 +304,7 @@ ui <- fluidPage(
 
     tags$script(HTML(paste0(
       "document.documentElement.classList.add('js');",
-      "try { if (localStorage.getItem('rl-theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {}",
+      "try { var t = localStorage.getItem('rl-theme'), h = document.documentElement; if (t === 'light') h.setAttribute('data-theme', 'light'); else if (/^(buttermilk|midnight|seashell|tangerine|lavender|plum|marigold|blush|butternut|cherry|olive|beige)$/.test(t)) { h.setAttribute('data-theme', t); h.setAttribute('data-pal', '1'); } } catch (e) {}",
       # failsafe: if the scroll engine never starts, show everything instead of leaving it hidden
       "setTimeout(function(){ if (!window.__rvReady) document.documentElement.classList.remove('js'); }, 8000);"
     ))),
@@ -326,6 +326,7 @@ ui <- fluidPage(
         --pill: #ffffff;
         --pill-ink: #0a0a0a;
         --rose: #f4a3b5;
+        --glow: rgba(244, 163, 181, 0.10);
         /* surfaces that were hard-coded, now themeable */
         --fill: rgba(255, 255, 255, 0.05);
         --fill-2: rgba(255, 255, 255, 0.08);
@@ -380,8 +381,55 @@ ui <- fluidPage(
         --tile-a: #ffffff;
         --tile-b: #f1ede7;
       }
+      /* ---- Colour combos: each pair gives two themes (either colour as the page). Only 4 seeds per theme,
+         everything else is derived from them below. ---- */
+      html[data-theme="buttermilk"] { --c-bg: #FFF2BA; --c-ink: #0F3C65; --c-accent: #0F3C65; --c-scheme: light; }
+      html[data-theme="midnight"] { --c-bg: #0F3C65; --c-ink: #FFF2BA; --c-accent: #FFF2BA; --c-scheme: dark; }
+      html[data-theme="seashell"] { --c-bg: #FFF7EF; --c-ink: #5A2E1B; --c-accent: #FF844D; --c-scheme: light; --c-pill: #FF844D; --c-pill-ink: #3A1807; }
+      html[data-theme="tangerine"] { --c-bg: #FF844D; --c-ink: #3A1807; --c-accent: #FFF7EF; --c-scheme: light; }
+      html[data-theme="lavender"] { --c-bg: #CCC3EB; --c-ink: #4E3B53; --c-accent: #4E3B53; --c-scheme: light; }
+      html[data-theme="plum"] { --c-bg: #4E3B53; --c-ink: #CCC3EB; --c-accent: #CCC3EB; --c-scheme: dark; }
+      html[data-theme="marigold"] { --c-bg: #FFE08C; --c-ink: #713443; --c-accent: #E36887; --c-scheme: light; --c-pill: #E36887; --c-pill-ink: #3D0F1F; }
+      html[data-theme="blush"] { --c-bg: #E36887; --c-ink: #3D0F1F; --c-accent: #FFE08C; --c-scheme: light; }
+      html[data-theme="butternut"] { --c-bg: #FFA175; --c-ink: #5C0702; --c-accent: #5C0702; --c-scheme: light; }
+      html[data-theme="cherry"] { --c-bg: #5C0702; --c-ink: #FFA175; --c-accent: #FFA175; --c-scheme: dark; }
+      html[data-theme="olive"] { --c-bg: #4D694E; --c-ink: #FFF3D5; --c-accent: #FFF3D5; --c-scheme: dark; }
+      html[data-theme="beige"] { --c-bg: #FFF3D5; --c-ink: #4D694E; --c-accent: #4D694E; --c-scheme: light; }
+      html[data-pal] {
+        color-scheme: var(--c-scheme);
+        --bg: var(--c-bg);
+        --surface: color-mix(in srgb, var(--c-bg) 93%, var(--c-ink));
+        --sunken: color-mix(in srgb, var(--c-bg) 89%, var(--c-ink));
+        --line: color-mix(in srgb, var(--c-ink) 16%, transparent);
+        --line-strong: color-mix(in srgb, var(--c-ink) 32%, transparent);
+        --line-hi: color-mix(in srgb, var(--c-ink) 42%, transparent);
+        --text: var(--c-ink);
+        --soft: color-mix(in srgb, var(--c-ink) 84%, var(--c-bg));
+        --muted: color-mix(in srgb, var(--c-ink) 64%, var(--c-bg));
+        --pill: var(--c-pill, var(--c-ink));
+        --pill-ink: var(--c-pill-ink, var(--c-bg));
+        --rose: var(--c-accent);
+        --glow: color-mix(in srgb, var(--c-accent) 16%, transparent);
+        --fill: color-mix(in srgb, var(--c-ink) 6%, transparent);
+        --fill-2: color-mix(in srgb, var(--c-ink) 9%, transparent);
+        --fill-3: color-mix(in srgb, var(--c-ink) 14%, transparent);
+        --pill-hover: color-mix(in srgb, var(--pill) 84%, var(--c-bg));
+        --pill-active: color-mix(in srgb, var(--pill) 68%, var(--c-bg));
+        --glass: color-mix(in srgb, var(--c-bg) 78%, transparent);
+        --glass-strong: color-mix(in srgb, var(--c-bg) 94%, transparent);
+        --overlay: color-mix(in srgb, var(--c-bg) 96%, transparent);
+        --track: color-mix(in srgb, var(--c-ink) 14%, var(--c-bg));
+        --track-2: color-mix(in srgb, var(--c-ink) 22%, var(--c-bg));
+        --kbd: color-mix(in srgb, var(--c-ink) 8%, var(--c-bg));
+        --kbd-edge: color-mix(in srgb, var(--c-ink) 18%, transparent);
+        --ghost: color-mix(in srgb, var(--c-ink) 5%, transparent);
+        --tile-a: color-mix(in srgb, var(--c-ink) 4%, var(--c-bg));
+        --tile-b: color-mix(in srgb, var(--c-ink) 11%, var(--c-bg));
+      }
+      html[data-pal] .pin-art.on { opacity: 0.8; }
       /* flowers: dark theme shows the original photos, light theme the background-free cut-outs */
-      html[data-theme="light"] .only-dark, html:not([data-theme="light"]) .only-light { display: none !important; }
+      html[data-theme="light"] .only-dark, html[data-pal] .only-dark,
+      html:not([data-theme="light"]):not([data-pal]) .only-light { display: none !important; }
       .art.only-light { mix-blend-mode: normal; }
       html[data-theme="light"] .pin-art.on { opacity: 0.8; }
       /* sticky makes its own stacking context, so give it a backdrop for the blend modes to work against */
@@ -402,7 +450,7 @@ ui <- fluidPage(
       html { background: var(--bg); }
       body {
         background:
-          radial-gradient(900px 420px at 88% -8%, rgba(244, 163, 181, 0.10), transparent 65%),
+          radial-gradient(900px 420px at 88% -8%, var(--glow), transparent 65%),
           var(--bg);
         font-family: var(--sans);
         font-size: 15px;
@@ -599,6 +647,20 @@ ui <- fluidPage(
       .swatch-dark { background: linear-gradient(135deg, #1c1c1c 55%, #f4a3b5 55%); }
       .swatch-light { background: linear-gradient(135deg, #f6f3ee 55%, #c9456b 55%); }
       .menu-check { margin-left: auto; opacity: 0; font-size: 14px; }
+      .menu-panel { width: 292px; max-height: min(78vh, 560px); overflow-y: auto; overscroll-behavior: contain; }
+      .menu-title + .menu-item, .menu-item + .menu-title, .combo + .menu-title { margin-top: 0; }
+      .menu-title.second { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+      .combo { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 10px; }
+      .combo:hover { background: var(--fill); }
+      .combo-name { font-size: 13px; font-weight: 500; color: var(--soft); line-height: 1.25; }
+      .chip {
+        position: relative; flex: none; width: 30px; height: 30px; padding: 0; cursor: pointer;
+        border: 1px solid var(--line-strong); border-radius: 50%; background: var(--chip-bg);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .chip::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--chip-ink); }
+      .chip:hover { transform: scale(1.08); }
+      .chip[aria-checked="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
       .menu-item[aria-checked="true"] .menu-check { opacity: 1; }
 
       /* ---- Hero ---- */
@@ -606,7 +668,7 @@ ui <- fluidPage(
         min-height: min(100vh, 880px);
         padding: 160px 0 120px 0;
         overflow: hidden;
-        background: radial-gradient(760px 520px at 86% 30%, rgba(244, 163, 181, 0.10), transparent 70%);
+        background: radial-gradient(760px 520px at 86% 30%, var(--glow), transparent 70%);
       }
       .hero-copy { position: relative; z-index: 2; max-width: 640px; }
       .hero .display {
@@ -1007,7 +1069,7 @@ ui <- fluidPage(
         border: 1px solid var(--line);
         border-radius: var(--r-card);
         background:
-          radial-gradient(420px 220px at 85% 0%, rgba(244, 163, 181, 0.10), transparent 70%),
+          radial-gradient(420px 220px at 85% 0%, var(--glow), transparent 70%),
           linear-gradient(150deg, var(--tile-a), var(--tile-b));
         cursor: pointer;
         transition: transform 0.25s ease, border-color 0.2s ease;
@@ -1856,17 +1918,21 @@ ui <- fluidPage(
             var panel = document.getElementById('menu-panel');
             if (!btn || !panel) return;
             var root = document.documentElement;
-            var items = [].slice.call(panel.querySelectorAll('.menu-item'));
-            function current() { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
+            var all = [].slice.call(panel.querySelectorAll('[data-theme-choice]'));
+            function current() { return root.getAttribute('data-theme') || 'dark'; }
             function mark() {
-              items.forEach(function(b) {
+              all.forEach(function(b) {
                 b.setAttribute('aria-checked', String(b.getAttribute('data-theme-choice') === current()));
               });
             }
             function setTheme(t) {
               if (t === current()) return;
               root.classList.add('theme-anim');
-              if (t === 'light') root.setAttribute('data-theme', 'light'); else root.removeAttribute('data-theme');
+              if (t === 'dark') { root.removeAttribute('data-theme'); root.removeAttribute('data-pal'); }
+              else {
+                root.setAttribute('data-theme', t);
+                if (t === 'light') root.removeAttribute('data-pal'); else root.setAttribute('data-pal', '1');
+              }
               try { localStorage.setItem('rl-theme', t); } catch (e) {}
               mark();
               setTimeout(function() { root.classList.remove('theme-anim'); }, 600);
@@ -1877,7 +1943,7 @@ ui <- fluidPage(
               btn.setAttribute('aria-label', on ? 'Close theme menu' : 'Open theme menu');
             }
             btn.addEventListener('click', function(e) { e.stopPropagation(); open(!panel.classList.contains('open')); });
-            items.forEach(function(b) {
+            all.forEach(function(b) {
               b.addEventListener('click', function() { setTheme(b.getAttribute('data-theme-choice')); open(false); btn.focus(); });
             });
             document.addEventListener('click', function(e) {
@@ -1914,7 +1980,7 @@ ui <- fluidPage(
                 easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
                 smoothWheel: true,
                 prevent: function(n) {
-                  return !!(n.closest && n.closest('.keys-body, #preview-box:fullscreen, select, textarea, .irs-menu'));
+                  return !!(n.closest && n.closest('.keys-body, #preview-box:fullscreen, select, textarea, .irs-menu, #menu-panel'));
                 }
               });
             } catch (e) { lenis = null; }
@@ -2214,7 +2280,68 @@ ui <- fluidPage(
                         span(class = "swatch swatch-dark"), "Dark", span(class = "menu-check", HTML("&#10003;"))),
             tags$button(type = "button", class = "menu-item", role = "menuitemradio",
                         `data-theme-choice` = "light", `aria-checked` = "false",
-                        span(class = "swatch swatch-light"), "Light", span(class = "menu-check", HTML("&#10003;")))
+                        span(class = "swatch swatch-light"), "Light", span(class = "menu-check", HTML("&#10003;"))),
+            div(class = "menu-title second", "Colour combos"),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "buttermilk", `aria-checked` = "false", `aria-label` = "Buttermilk",
+                          title = "Buttermilk", style = "--chip-bg:#FFF2BA;--chip-ink:#0F3C65"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "midnight", `aria-checked` = "false", `aria-label` = "Midnight Blue",
+                          title = "Midnight Blue", style = "--chip-bg:#0F3C65;--chip-ink:#FFF2BA"),
+              span(class = "combo-name", "Buttermilk", tags$br(), "Midnight Blue")
+            ),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "seashell", `aria-checked` = "false", `aria-label` = "Seashell",
+                          title = "Seashell", style = "--chip-bg:#FFF7EF;--chip-ink:#5A2E1B"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "tangerine", `aria-checked` = "false", `aria-label` = "Tangerine",
+                          title = "Tangerine", style = "--chip-bg:#FF844D;--chip-ink:#3A1807"),
+              span(class = "combo-name", "Seashell", tags$br(), "Tangerine")
+            ),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "lavender", `aria-checked` = "false", `aria-label` = "Muted Lavender",
+                          title = "Muted Lavender", style = "--chip-bg:#CCC3EB;--chip-ink:#4E3B53"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "plum", `aria-checked` = "false", `aria-label` = "Deep Plum",
+                          title = "Deep Plum", style = "--chip-bg:#4E3B53;--chip-ink:#CCC3EB"),
+              span(class = "combo-name", "Muted Lavender", tags$br(), "Deep Plum")
+            ),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "marigold", `aria-checked` = "false", `aria-label` = "Soft Marigold",
+                          title = "Soft Marigold", style = "--chip-bg:#FFE08C;--chip-ink:#713443"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "blush", `aria-checked` = "false", `aria-label` = "Deep Blush",
+                          title = "Deep Blush", style = "--chip-bg:#E36887;--chip-ink:#3D0F1F"),
+              span(class = "combo-name", "Soft Marigold", tags$br(), "Deep Blush")
+            ),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "butternut", `aria-checked` = "false", `aria-label` = "Butternut",
+                          title = "Butternut", style = "--chip-bg:#FFA175;--chip-ink:#5C0702"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "cherry", `aria-checked` = "false", `aria-label` = "Deep Cherry",
+                          title = "Deep Cherry", style = "--chip-bg:#5C0702;--chip-ink:#FFA175"),
+              span(class = "combo-name", "Butternut", tags$br(), "Deep Cherry")
+            ),
+            div(
+              class = "combo",
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "olive", `aria-checked` = "false", `aria-label` = "Olive Green",
+                          title = "Olive Green", style = "--chip-bg:#4D694E;--chip-ink:#FFF3D5"),
+              tags$button(type = "button", class = "chip", role = "menuitemradio",
+                          `data-theme-choice` = "beige", `aria-checked` = "false", `aria-label` = "Beige Cream",
+                          title = "Beige Cream", style = "--chip-bg:#FFF3D5;--chip-ink:#4D694E"),
+              span(class = "combo-name", "Olive Green", tags$br(), "Beige Cream")
+            )
           )
         )
       )
