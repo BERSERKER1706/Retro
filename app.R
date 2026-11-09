@@ -1,3 +1,39 @@
+# =============================================================================
+# RETRO LENS  -  one single, self-contained file
+#   21 analog photo filters, one density slider, stacked layers, undo/redo,
+#   shareable look links, saved looks, a split Download button (.png/.jpg/.webp)
+#   and an optional REST API. Every picture, font and script is inside this file.
+#
+# HOW TO RUN
+#   1. Save this as  app.R  in an empty folder, open it in RStudio, click "Run App".
+#   2. Or, from the R Console (works from any folder):
+#        shiny::runApp(source("C:/path/to/app.R")$value)
+#
+# PACKAGES (R >= 4.1)
+#   Required:  install.packages(c("shiny", "magick", "base64enc", "cachem", "later", "jsonlite"))
+#   Optional:  install.packages(c("future", "promises"))   # big Downloads render in the
+#                                                          # background; other visitors
+#                                                          # are not held up
+#              install.packages("plumber")                 # the REST API (see below)
+#              install.packages("renv")                    # pin exact package versions
+#
+# REST API (optional, run it in its own R session)
+#   source("app.R"); retro_lens_api()                      # http://127.0.0.1:8000
+#   curl -X POST --data-binary @photo.jpg "http://127.0.0.1:8000/filter?name=Noir&density=20" -o out.jpg
+#
+# PINNED PACKAGE VERSIONS (optional)
+#   A lock file records the exact version of every package, so anyone can rebuild
+#   the same environment. It has to be created on YOUR machine (it lists what you
+#   have installed). Put app.R in its own folder, then run once:
+#        source("app.R"); lock_dependencies()
+#   That writes renv.lock. Anyone else then runs  renv::restore()  in that folder.
+#
+# Third-party parts embedded below
+#   Inter and Playfair Display fonts  - SIL Open Font License 1.1 (fontsource builds)
+#   Lenis smooth scrolling            - MIT License, Copyright (c) 2024 darkroom.engineering
+# =============================================================================
+
+
 # Loaded first (Shiny sources R/ alphabetically, before app.R).
 # Needs R >= 4.1 (native pipe, \(x) lambdas).
 
@@ -13,16 +49,28 @@ rm(.needed, .missing)
 library(shiny)
 library(magick)
 
+# "Hosted" mode is for small shared servers (shinyapps.io gives a free app about 1 GB of
+# memory in total). It is switched on automatically on shinyapps.io, or by putting
+# options(retrolens.hosted = TRUE) at the very top of app.R, or by setting the
+# environment variable RETROLENS_HOSTED=1. What changes: photos are limited to 3000 px
+# on the long side, no extra background R processes are started, and the preview cache
+# is smaller. On your own computer none of this applies.
+if (identical(Sys.getenv("R_CONFIG_ACTIVE"), "shinyapps") || nzchar(Sys.getenv("RETROLENS_HOSTED"))) {
+  options(retrolens.hosted = TRUE)
+}
+.hosted <- isTRUE(getOption("retrolens.hosted", FALSE))
+
 # Phone photos are routinely 5-15 MB; Shiny's default limit is 5 MB.
 options(shiny.maxRequestSize = 30 * 1024^2)
 
 # Rendered previews are cached (as small JPEG strings), shared between sessions.
-shinyOptions(cache = cachem::cache_mem(max_size = 128 * 1024^2))
+shinyOptions(cache = cachem::cache_mem(max_size = (if (.hosted) 64 else 128) * 1024^2))
 
 # Optional: with `future` + `promises` installed, the big full-size Download
 # renders in a background worker, so other visitors are not frozen meanwhile.
 # Without them everything still works; Download just renders in the main process.
-if (requireNamespace("future", quietly = TRUE) && requireNamespace("promises", quietly = TRUE)) {
+# (Skipped in hosted mode: every extra R process would eat into the small memory budget.)
+if (!.hosted && requireNamespace("future", quietly = TRUE) && requireNamespace("promises", quietly = TRUE)) {
   local({
     cores <- tryCatch(parallelly::availableCores(), error = function(e) 2L)
     try(future::plan(future::multisession, workers = max(2L, min(4L, as.integer(cores) - 1L))),
@@ -270,7 +318,8 @@ apply_layers <- function(img, layers, filter = "Original", density = 0) {
 
 WORK_SIDE <- 1400L   # long side of the copy used for the live preview
 THUMB_SIDE <- 520L   # long side of the copy used for archive tiles
-MAX_SIDE <- 6000L    # uploads larger than this are scaled down (memory guard)
+# uploads larger than this are scaled down (memory guard; lower on small hosted servers)
+MAX_SIDE <- if (isTRUE(getOption("retrolens.hosted", FALSE))) 3000L else 6000L
 
 # Server-side file-type check by magic bytes. The browser's `accept` filter is
 # only a hint; this runs before ImageMagick ever sees the file.
@@ -411,9 +460,10 @@ worker_bootstrap <- function() {
 }
 
 # Can this session render in the background? (needs the optional future + promises)
-# Set options(retrolens.async = FALSE) to force the in-process path.
+# Set options(retrolens.async = FALSE) to force the in-process path; hosted mode does too.
 async_available <- function() {
   isTRUE(getOption("retrolens.async", TRUE)) &&
+    !isTRUE(getOption("retrolens.hosted", FALSE)) &&
     requireNamespace("future", quietly = TRUE) && requireNamespace("promises", quietly = TRUE)
 }
 
@@ -2362,6 +2412,19 @@ APP_JS <- r"---(
           else if (b && b.requestFullscreen) b.requestFullscreen();
         }
         $(document).on('click', '#btn-expand', toggleFullscreen);
+
+        // The button always names what the next click does: "Expand" while normal,
+        // "Contract" while expanded. Listening to the browser's own event keeps it right
+        // however the mode changes (button, the F key, or the Esc key).
+        function syncExpandButton() {
+          var b = document.getElementById('btn-expand');
+          if (!b) return;
+          var on = !!document.fullscreenElement;
+          b.textContent = on ? 'Contract' : 'Expand';
+          b.title = on ? 'Leave the expanded view (F or Esc)' : 'Fullscreen preview (F)';
+        }
+        document.addEventListener('fullscreenchange', syncExpandButton);
+        syncExpandButton();
 
         // ---------- keyboard ----------
         document.addEventListener('keydown', function(e) {
