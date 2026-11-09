@@ -488,10 +488,15 @@ async_available <- function() {
 # =========================================================
 
 retro_lens_api <- function(host = "127.0.0.1", port = 8000L, max_mb = 20, run = TRUE) {
-  if (!requireNamespace("plumber", quietly = TRUE)) {
+  # plumber is looked up by name instead of being written as plumber::pr(...). That keeps
+  # it off the list of packages that publishing tools install on a server (shinyapps.io):
+  # the hosted app never runs the API, and plumber needs system libraries to build.
+  pkg <- "plumber"
+  if (!requireNamespace(pkg, quietly = TRUE)) {
     stop('The API needs plumber:  install.packages("plumber")', call. = FALSE)
   }
-  mime <- c(jpeg = "image/jpeg", png = "image/png", webp = "image/webp")
+  pl <- asNamespace(pkg)
+  mime <-c(jpeg = "image/jpeg", png = "image/png", webp = "image/webp")
 
   # Every response, errors included, is written by hand so the image bytes are never
   # passed through a JSON serializer.
@@ -537,15 +542,15 @@ retro_lens_api <- function(host = "127.0.0.1", port = 8000L, max_mb = 20, run = 
     reply(res, 200L, readBin(out, "raw", file.size(out)), mime[[format]])
   }
 
-  pr <- plumber::pr()
-  pr <- plumber::pr_get(pr, "/health", function() list(status = "ok"),
-                       serializer = plumber::serializer_unboxed_json())
-  pr <- plumber::pr_get(pr, "/filters", function() {
+  pr <- pl$pr()
+  pr <- pl$pr_get(pr, "/health", function() list(status = "ok"),
+                  serializer = pl$serializer_unboxed_json())
+  pr <- pl$pr_get(pr, "/filters", function() {
     list(filters = filter_names,
          density = "-100 .. 100 (0 = the filter's normal look, -50 = the original photo)")
-  }, serializer = plumber::serializer_unboxed_json())
-  pr <- plumber::pr_post(pr, "/filter", handler, parsers = "octet")
-  if (run) plumber::pr_run(pr, host = host, port = as.integer(port)) else pr
+  }, serializer = pl$serializer_unboxed_json())
+  pr <- pl$pr_post(pr, "/filter", handler, parsers = "octet")
+  if (run) pl$pr_run(pr, host = host, port = as.integer(port)) else pr
 }
 
 # =============================================================================
