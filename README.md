@@ -144,16 +144,16 @@ cd Retro
 
 | # | Filter | Mood | # | Filter | Mood |
 |:-:|---|---|   |:-:|---|---|
-| 1 | **Sepia** | Old family album |   | 11 | **Bright** | Airy and lifted |
-| 2 | **Vignette** | Dark, focused edges |   | 12 | **Moody** | Dark and desaturated |
-| 3 | **Grain** | Gritty film stock |   | 13 | **Negative** | Colours inverted |
-| 4 | **Faded** | Sun-bleached memory |   | 14 | **Poster** | Flat, reduced colours |
-| 5 | **Noir** | High-contrast black and white |   | 15 | **Blur** | Soft focus |
-| 6 | **Duotone** | Two-colour poster look |   | 16 | **Cyanotype** | Blueprint-blue print |
-| 7 | **Vintage** | Warm, aged print |   | 17 | **Sunset** | Orange-pink wash |
-| 8 | **Warm** | Golden-hour glow |   | 18 | **Emboss** | Raised, carved relief |
-| 9 | **Cool** | Cold, blue-leaning tones |   | 19 | **Sketch** | Pencil-drawn edges |
-| 10 | **Dramatic** | Punchy contrast |   | 20 | **Pixelate** | Chunky retro pixels |
+| 1 | **Sepia** | Old family album |    11 | **Bright** | Airy and lifted |
+| 2 | **Vignette** | Dark, focused edges |    12 | **Moody** | Dark and desaturated |
+| 3 | **Grain** | Gritty film stock |    13 | **Negative** | Colours inverted |
+| 4 | **Faded** | Sun-bleached memory |    14 | **Poster** | Flat, reduced colours |
+| 5 | **Noir** | High-contrast black and white |    15 | **Blur** | Soft focus |
+| 6 | **Duotone** | Two-colour poster look |    16 | **Cyanotype** | Blueprint-blue print |
+| 7 | **Vintage** | Warm, aged print |    17 | **Sunset** | Orange-pink wash |
+| 8 | **Warm** | Golden-hour glow |    18 | **Emboss** | Raised, carved relief |
+| 9 | **Cool** | Cold, blue-leaning tones |    19 | **Sketch** | Pencil-drawn edges |
+| 10 | **Dramatic** | Punchy contrast |    20 | **Pixelate** | Chunky retro pixels |
 
 </div>
 
