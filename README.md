@@ -143,7 +143,7 @@ cd Retro
 <div align="center">
 
 | # | Filter | Mood | # | Filter | Mood |
-|:-:|---|---|   |:-:|---|---|
+|:-:|---|---|   :-:|---|---|
 | 1 | **Sepia** | Old family album |    11 | **Bright** | Airy and lifted |
 | 2 | **Vignette** | Dark, focused edges |    12 | **Moody** | Dark and desaturated |
 | 3 | **Grain** | Gritty film stock |    13 | **Negative** | Colours inverted |
