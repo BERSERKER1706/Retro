@@ -121,6 +121,18 @@ Everything lives in **one `app.R`**. The flower imagery and the filter-thumbnail
 
 ### Install and run
 
+**Option A: exact package versions (recommended)**
+
+Open the project folder in R or RStudio, then run:
+
+```r
+renv::restore()
+```
+
+This installs the same package versions the app was built with, using `renv.lock`.
+
+**Option B: latest packages**
+
 ```r
 install.packages(c("shiny", "magick", "base64enc"))
 ```
@@ -136,7 +148,6 @@ or from a terminal:
 ```bash
 Rscript -e 'shiny::runApp("app.R", launch.browser = TRUE)'
 ```
-
 ### Get the code
 
 ```bash
@@ -261,7 +272,7 @@ rsconnect::deployApp(appFiles = "app.R", appName = "retro-lens")
 - [ ] Split `app.R` into `R/filters.R`, `R/ui.R`, `www/` assets and `server.R`
 - [ ] Accept HEIC and WebP uploads
 - [ ] Run filters on a downscaled copy for the live preview, and on the full image only for download
-- [ ] Pin dependencies with `renv`
+- [x] Pin dependencies with `renv`
 - [ ] Add screenshots and a demo GIF to this README
 
 ---
