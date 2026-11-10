@@ -33,7 +33,15 @@
 
 ## 📸 Preview
 
-> **Add your screenshots here.** Create an `assets/` folder in the repo, drop in the images, and uncomment the lines below.
+<p align="center">
+  <img src="assets/hero.png" alt="Retro Lens landing page" width="85%">
+</p>
+
+<p align="center">
+  <img src="assets/studio.png" alt="Studio with a filter applied" width="45%">
+  <img src="assets/split.png" alt="Split view comparing original and filtered" width="45%">
+  <img src="assets/archive.png" alt="Filter Archive view" width="45%">
+</p>
 
 <!--
 <p align="center">
