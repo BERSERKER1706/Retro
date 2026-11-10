@@ -140,29 +140,24 @@ cd Retro
 
 ## 🎨 The 21 filters
 
-| # | Filter | Mood |
-|:-:|---|---|
-| 1 | **Original** | Untouched reference |
-| 2 | **Sepia** | Old family album |
-| 3 | **Vignette** | Dark, focused edges |
-| 4 | **Grain** | Gritty film stock |
-| 5 | **Faded** | Sun-bleached memory |
-| 6 | **Noir** | High-contrast black and white |
-| 7 | **Duotone** | Two-colour poster look |
-| 8 | **Vintage** | Warm, aged print |
-| 9 | **Warm** | Golden-hour glow |
-| 10 | **Cool** | Cold, blue-leaning tones |
-| 11 | **Dramatic** | Punchy contrast |
-| 12 | **Bright** | Airy and lifted |
-| 13 | **Moody** | Dark and desaturated |
-| 14 | **Negative** | Colours inverted |
-| 15 | **Poster** | Flat, reduced colours |
-| 16 | **Blur** | Soft focus |
-| 17 | **Cyanotype** | Blueprint-blue print |
-| 18 | **Sunset** | Orange-pink wash |
-| 19 | **Emboss** | Raised, carved relief |
-| 20 | **Sketch** | Pencil-drawn edges |
-| 21 | **Pixelate** | Chunky retro pixels |
+<div align="center">
+
+| # | Filter | Mood | # | Filter | Mood |
+|:-:|---|---|:-:|---|---|
+| 1 | **Sepia** | Old family album | 11 | **Bright** | Airy and lifted |
+| 2 | **Vignette** | Dark, focused edges | 12 | **Moody** | Dark and desaturated |
+| 3 | **Grain** | Gritty film stock | 13 | **Negative** | Colours inverted |
+| 4 | **Faded** | Sun-bleached memory | 14 | **Poster** | Flat, reduced colours |
+| 5 | **Noir** | High-contrast black and white | 15 | **Blur** | Soft focus |
+| 6 | **Duotone** | Two-colour poster look | 16 | **Cyanotype** | Blueprint-blue print |
+| 7 | **Vintage** | Warm, aged print | 17 | **Sunset** | Orange-pink wash |
+| 8 | **Warm** | Golden-hour glow | 18 | **Emboss** | Raised, carved relief |
+| 9 | **Cool** | Cold, blue-leaning tones | 19 | **Sketch** | Pencil-drawn edges |
+| 10 | **Dramatic** | Punchy contrast | 20 | **Pixelate** | Chunky retro pixels |
+
+</div>
+
+<p align="center"><sub>Plus <b>Original</b>, the untouched photo, which makes 21 looks in total.</sub></p>
 
 ---
 
