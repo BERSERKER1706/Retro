@@ -278,7 +278,7 @@ If Retro Lens made your photo look better, a ⭐ on the repo is much appreciated
 
 ## 📄 License
 
-Released under the **MIT License**. Add a `LICENSE` file to the repo root with the standard MIT text to make this official.
+Released under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 <div align="center">
 
