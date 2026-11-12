@@ -291,7 +291,7 @@ Ideas, bug reports and new filters are welcome.
 
 Built by **Sir Skull** ([@BERSERKER1706](https://github.com/BERSERKER1706)), B.Tech Computer Science student at B.K. Birla Institute of Engineering and Technology, Pilani.
 
-If Retro Lens made your photo look better, a ⭐ on the repo is much appreciated.
+If Retro Lens made your photo look better, share it with your circle and a ⭐ on the repo is much appreciated.
 
 ---
 
